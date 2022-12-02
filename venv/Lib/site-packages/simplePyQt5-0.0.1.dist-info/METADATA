@@ -1,0 +1,598 @@
+Metadata-Version: 2.1
+Name: simplePyQt5
+Version: 0.0.1
+Summary: simple PyQt5
+Home-page: https://github.com/yjg30737/simplePyQt5.git
+Author: Jung Gyu Yoon
+Author-email: yjg30737@gmail.com
+License: MIT
+Platform: UNKNOWN
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: PyQt5 (>=5.8)
+
+
+# simplePyQt5
+
+This is the package i used when i was new at PyQt5.
+
+
+
+I uploaded this to pypi for the sake of preventing dependency error of some packages. 
+
+
+
+## Table of Contents
+
+* [General Info](#general-info)
+
+* [Requirements](#requirements)
+
+* [Class Overview](#class-overview)
+
+* [Setup](#setup)
+
+* [Usage](#usage)
+
+
+
+## General Info
+
+Being able to add a couple of Qt widgets and separator at once, align them easily, no need to make layout.
+
+This package can come in handy to someone who want to make prototype UI quick.
+
+I used it all the times when i was new at PyQt5.
+
+
+
+## Requirements
+
+* PyQt5
+
+
+
+## Class Overview
+
+* HorizontalWidget
+
+
+
+Add widgets and separators horizontally.
+
+
+
+* VerticalWidget
+
+
+
+Add widgets and separators vertically.
+
+
+
+* LeftRightWidget
+
+
+
+Add some widgets left side of the widget and add the others right side.
+
+Unlike QFormLayout which only can set QLabel to the one side, You can add a bunch of other stuffs like QComboBox, QCheckBox.
+
+
+
+* TopLeftRightWidget
+
+
+
+This module inherits LeftRightWidget.
+
+Top of this widget is LeftRightWidget and bottom part of this you can add/set a bunch of widgets such as QListWidget or separators.
+
+
+
+* TopLabelBottomWidget
+
+
+
+If you want to add the label on the top of the TopLeftRightWidget, This is for you.
+
+Using `setLabel(text: str)` method to set the label.
+
+
+
+* OkCancelWidget
+
+
+
+Add Ok, Cancel buttons to bottom right of certain QDialog. Attach to parent widget like `OkCancelWidget(self)` and then add to parent widget's layout like `lay.addWidget(okCancelWidget)` then ok, cancel buttons will show up bottom right part of the widget.
+
+
+
+※ This only works in QDialog!
+
+
+
+* InsertDialog
+
+
+
+Basic dialog to insert the text. It contains QLineEdit, QPushButton. if user insert the text in QLineEdit, QPushButton will be enabled to click. If QLineEdit is empty, QPushButton will be disabled.
+
+
+
+* TableWidget
+
+
+
+Adding row items or column items much easier then usual QTableWidget. No need to make QTableWidgetItem. Header labels always be align in center.
+
+Both horizontal and vertical headers are not visible in default. But you can use `setHorizontalHeaderLabels(lst)` to add header labels(it will set column count by amount of header labels you given at the same time, align headers as center also.). same goes to vertical one.
+
+
+
+※ Maybe i'll make this as independent package. Don't give me wrong; I won't remove this module from this package.
+
+※ A lot of things that doesn't explain will be explained. Sorry 'bout that.
+
+
+
+* StyleApplier
+
+
+
+This module help you apply style, icon, tooltip over widgets. Style path and icon path are set to `style` and `icon` folder in your script folder by default. So if you want to use this module you have to make those two and put the css files and icon files inside them.
+
+You can change those two paths, though.
+
+
+
+## Setup
+
+`python -m pip install simplePyQt5`
+
+
+
+## Usage
+
+* HorizontalWidget
+
+
+
+Code
+
+```python
+
+    from simplePyQt5.horizontalWidget import HorizontalWidget
+
+    ...
+
+    horizontalWidget = HorizontalWidget()
+
+    btn1 = QPushButton('btn1')
+
+    btn2 = QPushButton('btn2')
+
+    # Add two buttons horizontally, "''" between to buttons is separator, align parameter make widgets align
+
+    horizontalWidget.addWidgets([btn1, '', btn2], align=Qt.AlignCenter)
+
+```
+
+Result
+
+
+
+![HorizontalWidget](./examples/horizontalWidgetExample.png)
+
+
+
+* VerticalWidget
+
+
+
+Code
+
+
+
+Same as HorizontalWidget. Only difference is name.
+
+
+
+Result
+
+
+
+![VerticalWidget](./examples/verticalWidgetExample.png)
+
+
+
+* LeftRightWidget
+
+```python
+
+    from simplePyQt5.leftRightWidget import LeftRightWidget
+
+    ...
+
+    lrWidget = LeftRightWidget()
+
+    lineEdit = QLineEdit()
+
+    lineEdit.setFixedWidth(80) # Prevent width of lineEdit grow endlessly to show this modules feature
+
+    btn = QPushButton()
+
+    lrWidget.setLeftWidgets([lineEdit]) # Add lineEdit left side of the lrWidget
+
+    lrWidget.setRightWidgets([btn]) # Add btn right side of the lrWidget
+
+```
+
+Result
+
+
+
+![LeftRightWidget](./examples/leftRightWidgetExample.png)
+
+
+
+* TopLeftRightWidget
+
+
+
+As i said this inherits LeftRightWidget so its usage is kinda simillar to LeftRightWidget.
+
+
+
+Code
+
+```python
+
+    from simplePyQt5.topLeftRightWidget import TopLeftRightWidget
+
+    ...
+
+    tlrWidget = TopLeftRightWidget()
+
+    lbl = QLabel('Files')
+
+    addBtn = QPushButton('Add')
+
+    delBtn = QPushButton('Delete')
+
+    listWidget = QListWidget()
+
+    tlrWidget.setLeftWidgets([lbl])
+
+    tlrWidget.setRightWidgets([addBtn, delBtn])
+
+    tlrWidget.addBottomWidget(listWidget)
+
+```
+
+Result
+
+
+
+![TopLeftRightWidget](./examples/topLeftRightWidgetExample.png)
+
+
+
+* StyleApplier
+
+
+
+Using TopLeftRightWidget as showing StyleApplier's feature.
+
+
+
+Code
+
+```python
+
+    from simplePyQt5.styleApplier import StyleApplier
+
+    ...
+
+    tlrWidget = TopLeftRightWidget()
+
+    lbl = QLabel('Files')
+
+    addBtn = QPushButton()
+
+    delBtn = QPushButton()
+
+
+
+    btns = [addBtn, delBtn]
+
+    applier = StyleApplier()
+
+    applier.setCssFile('style1.css', btns) # apply css file to btns list 
+
+    applier.setIconAutomatically(['add.png', 'delete.png'], btns) # apply icon files to btns list
+
+    applier.setToolTip(['Add', 'Delete'], btns) # apply tooltips to btns list
+
+
+
+    listWidget = QListWidget()
+
+    tlrWidget.setLeftWidgets([lbl])
+
+    tlrWidget.setRightWidgets([addBtn, delBtn])
+
+    tlrWidget.addBottomWidget(listWidget)
+
+```
+
+Result
+
+
+
+![StyleApplier](./examples/styleApplierExample.png)
+
+
+
+Again, Style path and icon path are set to `style` and `icon` folder in your script folder by default. So if you want to use this module you have to make those two and put the css files and icon files inside them.
+
+
+
+You can change those two default paths with `setStylePath` and `setIconPath` method.
+
+
+
+If you want to apply css code itself over widgets instead of file, use `setCssCode` method.
+
+
+
+If you want to adjust widgets' size to icons' size naturally, use `setHintSize` method.
+
+
+
+* TopLabelBottomWidget
+
+
+
+Code(Full)
+
+```python
+
+import sys
+
+
+
+from PyQt5.QtWidgets import QMainWindow, QPushButton, QApplication, QListWidget, QCheckBox
+
+from simplePyQt5 import StyleApplier
+
+from simplePyQt5.topLabelBottomWidget import TopLabelBottomWidget
+
+
+
+
+
+class MainWindow(QMainWindow):
+
+    def __init__(self):
+
+        super().__init__()
+
+        self.__initUi()
+
+
+
+    def __initUi(self):
+
+        mainWidget = TopLabelBottomWidget()
+
+        mainWidget.setLabel('Files')
+
+
+
+        allChkBox = QCheckBox('Check All')
+
+
+
+        addBtn = QPushButton()
+
+        delBtn = QPushButton()
+
+
+
+        btns = [addBtn, delBtn]
+
+        applier = StyleApplier()
+
+        applier.setCssFile('style1.css', btns)
+
+        applier.setIconAutomatically(['add.png', 'delete.png'], btns)
+
+        applier.setToolTip(['Add', 'Delete'], btns)
+
+
+
+        listWidget = QListWidget()
+
+        mainWidget.setLeftWidgets([allChkBox])
+
+        mainWidget.setRightWidgets([addBtn, delBtn])
+
+        mainWidget.addBottomWidget(listWidget)
+
+        lay = mainWidget.layout()
+
+        lay.setContentsMargins(5, 5, 5, 5)
+
+        self.setCentralWidget(mainWidget)
+
+
+
+
+
+if __name__ == "__main__":
+
+    app = QApplication(sys.argv)
+
+    mainWindow = MainWindow()
+
+    mainWindow.show()
+
+    sys.exit(app.exec_())
+
+```
+
+
+
+Result
+
+
+
+![TopLabelBottomWidget](./examples/topLabelBottomWidgetExample.png)
+
+
+
+* OkCancelWidget
+
+
+
+Add OkCancelWidget to TopLabelBottomWidget example code.
+
+
+
+Code
+
+```python
+
+        listWidget = QListWidget()
+
+        mainWidget.setLeftWidgets([allChkBox])
+
+        mainWidget.setRightWidgets([addBtn, delBtn])
+
+        mainWidget.addBottomWidget(listWidget)
+
+        
+
+        okCancelWidget = OkCancelWidget(self) # make OkCancelWidget instance
+
+        mainWidget.addBottomWidget(okCancelWidget) # attach
+
+        
+
+        lay = mainWidget.layout()
+
+        lay.setContentsMargins(5, 5, 5, 5)
+
+        self.setCentralWidget(mainWidget)
+
+```
+
+Result
+
+
+
+![OkCancelWidget](./examples/okCancelWidgetExample.png)
+
+
+
+Well, You might think result image looks quite different than the others. Because i write `lay.setContentMargins(5, 5, 5, 5)` to make it less ugly.
+
+I kinda regret that i didn't set the contents margins to other examples. Whatever.
+
+
+
+* InsertDialog
+
+
+
+Code
+
+```python
+
+
+
+addBtn = QPushButton()
+
+addBtn.clicked.connect(self.__add) # Show InsertDialog when addBtn clicked
+
+delBtn = QPushButton()
+
+...
+
+def __add(self):
+
+    dialog = InsertDialog() # make instance
+
+    reply = dialog.exec()
+
+    if reply == QDialog.Accepted: # if user clicked ok button in InsertDialog 
+
+        print(dialog.getText()) # get the text
+
+
+
+```
+
+Result
+
+
+
+![InsertDialog](./examples/insertDialogExample.png)
+
+
+
+* TableWidget
+
+
+
+Code(Horizontal)
+
+```python
+
+tableWidget = TableWidget()
+
+tableWidget.setHorizontalHeaderLabels(['Name', 'Sex', 'Age']) # Add labels. the method overrides the setHorizontalHeaderLabels of QTableWidget.
+
+tableWidget.addData(['a', 'b', 'c'], align=Qt.AlignCenter) # Add data like this. 'a', 'b', 'c' will be added as QTableWidgetItem. One row also will be added. You can give an align option.
+
+```
+
+
+
+Code(Vertical)
+
+```python
+
+tableWidget = TableWidget()
+
+tableWidget.setVerticalHeaderLabels(['Name', 'Sex', 'Age'])
+
+tableWidget.setColumnCount(3) # You have to set column count unlike the horizontal one. Because addData do add row but not add column.
+
+tableWidget.addData(['a', 'b', 'c'], align=Qt.AlignCenter)
+
+```
+
+
+
+* Other
+
+
+
+These classes' content margins are set to zero as default, so if you want to set the margin then
+
+```python
+
+    lrWidget = LeftRightWidget()
+
+    lay = lrWidget.layout()
+
+    lay.setContentMargins(5, 5, 5, 5)
+
+```
+
+get the widget's layout like this and set content margins or anything such as spacing.
+
+
+
